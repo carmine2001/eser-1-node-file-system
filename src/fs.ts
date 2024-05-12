@@ -28,7 +28,7 @@ const dataEntity = (ms:number) =>  {
         tempo = `${differenzaMesi} mesi fa`
     }
     if(differenzaMesi >= 24){
-        tempo = dateTime.toFormat("MM-dd-yyyy");
+        tempo = `modificato il ${dateTime.toFormat("MM-dd-yyyy")}`;
     }
 
     return tempo;
@@ -46,23 +46,22 @@ let count = 2;
     
         if(dir.isDirectory()){
             const readDir = fs.readdirSync(path.join(dir.path,dir.name),{withFileTypes:true});
-            readDir.forEach((dir) => {
-                if(dir.isDirectory()){
-                    const dirStat = fs.statSync(path.join(dir.path,dir.name));
-                    console.log(chalk.green("  |".repeat(count),dir.name));
-                    openDir(dir,count+1)
+            readDir.forEach((sotto_dir) => {
+                if(sotto_dir.isDirectory()){
+                    console.log(chalk.green("  |".repeat(count),sotto_dir.name));
+                    openDir(sotto_dir,count+1)
                 }
                 else{
-                    const fileStat = fs.statSync(path.join(dir.path,dir.name));
+                    const fileStat = fs.statSync(path.join(sotto_dir.path,sotto_dir.name));
                     const array = dataEntity(fileStat.mtimeMs).toLocaleString().split(" ");
                     if(array.includes("ore") && +array[0] < 24){
-                        console.log(chalk.red("  |".repeat(count),dir.name,dataEntity(fileStat.mtimeMs)));
+                        console.log(chalk.red("  |".repeat(count),sotto_dir.name,dataEntity(fileStat.mtimeMs)));
                     }
                     else if(array.includes("giorni") && +array[0] < 2){
-                        console.log(chalk.blue("  |".repeat(count),dir.name,dataEntity(fileStat.mtimeMs)));
+                        console.log(chalk.blue("  |".repeat(count),sotto_dir.name,dataEntity(fileStat.mtimeMs)));
                     }
                     else{
-                        console.log("  |".repeat(count),dir.name,dataEntity(fileStat.mtimeMs));
+                        console.log("  |".repeat(count),sotto_dir.name,dataEntity(fileStat.mtimeMs));
                     }
                             
                         
